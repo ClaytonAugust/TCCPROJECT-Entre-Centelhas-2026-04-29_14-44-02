@@ -10,6 +10,16 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+# Node.js
+backend/node_modules/
+backend/.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/
