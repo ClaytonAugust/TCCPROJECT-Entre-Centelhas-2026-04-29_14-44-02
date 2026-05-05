@@ -14,7 +14,7 @@ public class APIManager : MonoBehaviour
 
     public IEnumerator EnviarParaIA(string mensagem)
     {
-        string url = "SUA_API_AQUI";
+        string url = "http://localhost:3000/chat";
 
         string json = "{\"mensagem\": \"" + mensagem + "\"}";
 
