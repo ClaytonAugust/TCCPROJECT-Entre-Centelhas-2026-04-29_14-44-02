@@ -446,6 +446,7 @@ GameObject:
   - component: {fileID: 269703138}
   - component: {fileID: 269703137}
   - component: {fileID: 269703136}
+  - component: {fileID: 269703139}
   m_Layer: 5
   m_Name: Scroll View
   m_TagString: Untagged
@@ -470,10 +471,10 @@ RectTransform:
   - {fileID: 437096399}
   m_Father: {fileID: 952704639}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -19.372, y: 45}
-  m_SizeDelta: {x: 207.2556, y: 203.9069}
+  m_AnchorMin: {x: 0.5, y: 0.42860723}
+  m_AnchorMax: {x: 0.52114797, y: 0.5}
+  m_AnchoredPosition: {x: -26.372, y: 59.5}
+  m_SizeDelta: {x: 193.2556, y: 174.9069}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &269703136
 MonoBehaviour:
@@ -543,6 +544,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 269703134}
   m_CullTransparentMesh: 1
+--- !u!114 &269703139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269703134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b04c582615fc04ab268d5fa30b0069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatManager
+  inputField: {fileID: 0}
+  chatText: {fileID: 0}
 --- !u!1 &437096398
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +594,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 6.3259, y: 0}
+  m_AnchoredPosition: {x: 13.163, y: 0}
   m_SizeDelta: {x: 26.3259, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &437096400
@@ -626,7 +641,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1710644462}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.62302303
+  m_Size: 0.622927
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -992,6 +1007,7 @@ GameObject:
   - component: {fileID: 673837196}
   - component: {fileID: 673837195}
   - component: {fileID: 673837194}
+  - component: {fileID: 673837197}
   m_Layer: 5
   m_Name: InputField (TMP)
   m_TagString: Untagged
@@ -1158,6 +1174,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673837192}
   m_CullTransparentMesh: 1
+--- !u!114 &673837197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 673837192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b04c582615fc04ab268d5fa30b0069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatManager
+  inputField: {fileID: 0}
+  chatText: {fileID: 0}
 --- !u!1 &744200065
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1419,7 @@ GameObject:
   - component: {fileID: 1252873710}
   - component: {fileID: 1252873709}
   - component: {fileID: 1252873708}
+  - component: {fileID: 1252873711}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1460,16 +1491,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 91b04c582615fc04ab268d5fa30b0069, type: 3}
-        m_TargetAssemblyTypeName: UnityEditor.MonoScript, UnityEditor.CoreModule
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 1252873711}
+        m_TargetAssemblyTypeName: ChatManager, Assembly-CSharp
+        m_MethodName: EnviarMensagem
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: "ChatManager \u2192 EnviarMensagem()"
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1252873709
@@ -1510,6 +1541,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1252873706}
   m_CullTransparentMesh: 1
+--- !u!114 &1252873711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252873706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91b04c582615fc04ab268d5fa30b0069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChatManager
+  inputField: {fileID: 0}
+  chatText: {fileID: 0}
 --- !u!1 &1643204258
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +2045,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1995931486}
+  - component: {fileID: 1995931487}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -2026,6 +2072,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
+--- !u!222 &1995931487
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1995931485}
+  m_CullTransparentMesh: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
