@@ -21,11 +21,23 @@ public class ChatManager : MonoBehaviour
 
     public void ReceberResposta(string respostaJson)
     {
-        // Converte o JSON que veio do Node.js para a classe C#
+        // 1. Log para ver o que chegou exatamente
+        Debug.Log("Chegou no Unity: " + respostaJson);
+
         RespostaNPC npc = JsonUtility.FromJson<RespostaNPC>(respostaJson);
 
-        // Mostra apenas o texto limpo para o jogador!
-        chatText.text += "\nNPC: " + npc.dialogo;
+        // 2. Checagem de segurança para o objeto NPC
+        if (npc == null) {
+            Debug.LogError("O JsonUtility não conseguiu converter a resposta!");
+            return;
+        }
+
+        // 3. Checagem de segurança para o componente de texto
+        if (chatText != null) {
+            chatText.text += "\nNPC: " + npc.dialogo;
+        } else {
+            Debug.LogError("ERRO: O campo 'Chat Text' não foi arrastado no Inspector!");
+        }
     }
 }
 
