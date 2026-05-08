@@ -10,49 +10,34 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Inicializa o SDK usando a chave do seu .env
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Seu prompt estruturado
+// Função para validar quais modelos estão disponíveis para sua chave
+async function listModels() {
+    const models = await genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" }); 
+    // Se o de cima falhar, você verá no log.
+}
+
+// Configuração do NPC de Ansiedade
 const promptSistema = `
-Você representa ansiedade social.
-
-Você sente medo de julgamento.
-Você evita contato social.
-Você interpreta situações neutras como ameaças.
-
-Se o jogador for empático:
-- você melhora lentamente
-- fica mais confortável
-- ganha confiança
-
-Se o jogador for agressivo:
-- você se fecha
-- evita conversar
-- aumenta ansiedade
+Você é um NPC que sofre de ansiedade social severa.
+Sinta medo de julgamento e interprete frases neutras como ameaças.
+Reaja à empatia melhorando seu nível de abertura.
+Reaja à agressividade se fechando totalmente.
 `;
 
-// Configuração do modelo forçando a saída em JSON
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  // Use exatamente este nome. Se der erro, tente "gemini-1.5-flash-latest"
+  model: "gemini-3.1-flash-lite", 
   systemInstruction: promptSistema,
   generationConfig: {
     responseMimeType: "application/json",
     responseSchema: {
       type: SchemaType.OBJECT,
       properties: {
-        dialogo: {
-          type: SchemaType.STRING,
-          description: "A fala do NPC",
-        },
-        nivel_abertura: {
-          type: SchemaType.NUMBER,
-          description: "Float de 0.0 a 1.0 indicando conforto",
-        },
-        emocao_detectada: {
-          type: SchemaType.STRING,
-          description: "ansioso, defensivo, reflexivo ou calmo",
-        },
+        dialogo: { type: SchemaType.STRING },
+        nivel_abertura: { type: SchemaType.NUMBER },
+        emocao_detectada: { type: SchemaType.STRING },
       },
       required: ["dialogo", "nivel_abertura", "emocao_detectada"],
     },
@@ -62,17 +47,24 @@ const model = genAI.getGenerativeModel({
 app.post("/chat", async (req, res) => {
   try {
     const { mensagem } = req.body;
+    console.log("Jogador disse:", mensagem);
 
-    // Envia a mensagem do jogador para a IA
     const result = await model.generateContent(mensagem);
-    
-    // O texto já virá garantido no formato JSON estruturado
-    const textoJson = result.response.text(); 
+    const response = await result.response;
+    const text = response.text();
 
-    res.send(textoJson);
+    console.log("IA respondeu:", text);
+    res.send(text);
   } catch (erro) {
-    console.error(erro);
-    res.status(500).send("Erro no servidor");
+    // Aqui capturamos o erro do Google e mostramos no console do Node
+    console.error("ERRO NA API DO GOOGLE:", erro.message);
+    
+    // Enviamos um JSON de erro para a Unity não dar NullReference
+    res.status(500).json({
+        dialogo: "Eu... eu não consigo falar agora...",
+        nivel_abertura: 0.1,
+        emocao_detectada: "ansioso"
+    });
   }
 });
 
