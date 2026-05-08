@@ -19,8 +19,20 @@ public class ChatManager : MonoBehaviour
         inputField.text = "";
     }
 
-    public void ReceberResposta(string resposta)
+    public void ReceberResposta(string respostaJson)
     {
-        chatText.text += "\nNPC: " + resposta;
+        // Converte o JSON que veio do Node.js para a classe C#
+        RespostaNPC npc = JsonUtility.FromJson<RespostaNPC>(respostaJson);
+
+        // Mostra apenas o texto limpo para o jogador!
+        chatText.text += "\nNPC: " + npc.dialogo;
     }
+}
+
+[System.Serializable]
+public class RespostaNPC
+{
+    public string dialogo;
+    public float nivel_abertura;
+    public string emocao_detectada;
 }
