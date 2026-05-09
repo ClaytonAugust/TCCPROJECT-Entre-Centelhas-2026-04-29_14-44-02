@@ -15,7 +15,6 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 // Função para validar quais modelos estão disponíveis para sua chave
 async function listModels() {
     const models = await genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" }); 
-    // Se o de cima falhar, você verá no log.
 }
 
 // Configuração do NPC de Ansiedade
@@ -27,7 +26,6 @@ Reaja à agressividade se fechando totalmente.
 `;
 
 const model = genAI.getGenerativeModel({
-  // Use exatamente este nome. Se der erro, tente "gemini-1.5-flash-latest"
   model: "gemini-3.1-flash-lite", 
   systemInstruction: promptSistema,
   generationConfig: {
@@ -56,10 +54,9 @@ app.post("/chat", async (req, res) => {
     console.log("IA respondeu:", text);
     res.send(text);
   } catch (erro) {
-    // Aqui capturamos o erro do Google e mostramos no console do Node
+    
     console.error("ERRO NA API DO GOOGLE:", erro.message);
     
-    // Enviamos um JSON de erro para a Unity não dar NullReference
     res.status(500).json({
         dialogo: "Eu... eu não consigo falar agora...",
         nivel_abertura: 0.1,
