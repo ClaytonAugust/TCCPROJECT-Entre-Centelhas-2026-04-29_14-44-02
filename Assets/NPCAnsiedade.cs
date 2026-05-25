@@ -58,4 +58,20 @@ public class NPCAnsiedade : MonoBehaviour
             painelChat.SetActive(false); // Fecha o chat ao se afastar
         }
     }
+    public GameObject iconeAlerta;
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            jogadorPerto = true;
+            if (iconeAlerta != null) iconeAlerta.SetActive(true); // Liga o "!"
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other) {
+        if (other.CompareTag("Player")) {
+            jogadorPerto = false;
+            if (iconeAlerta != null) iconeAlerta.SetActive(false); // Desliga o "!"
+            painelChat.SetActive(false); 
+        }
+    }
 }
