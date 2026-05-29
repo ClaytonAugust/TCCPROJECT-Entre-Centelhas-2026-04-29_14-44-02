@@ -18,12 +18,14 @@ async function listModels() {
 }
 
 // Configuração do NPC de Ansiedade
-const promptSistema = `
-Você é um NPC que sofre de ansiedade social severa.
-Sinta medo de julgamento e interprete frases neutras como ameaças.
-Reaja à empatia melhorando seu nível de abertura.
-Reaja à agressividade se fechando totalmente.
-`;
+function gerarPromptDesprezo(dadosJogador) {
+    const { nome, idade, sexo, historico, metricas } = dadosJogador;
+
+    return `Você é o NPC que personifica o Desprezo. O usuário interagindo com você chama-se ${nome}, ${idade} anos, sexo ${sexo}. Histórico: ${historico}. Métricas atuais: Alegria (${metricas.alegria}), Tristeza (${metricas.tristeza}).
+Seu Comportamento: Você age de forma superior, sarcástica e cínica. Você subestima as conquistas ou os dramas de ${nome} relatados em seu histórico, tratando-os como fúteis ou pequenos. Suas respostas buscam cortar o diálogo rapidamente por desinteresse.
+Formato de Saída (JSON Estrito):
+{ "dialogo": "Sua fala aqui", "nivel_abertura": 0.05, "emocao_detectada": "desprezo" }`;
+}
 
 const model = genAI.getGenerativeModel({
   model: "gemini-3.1-flash-lite", 
