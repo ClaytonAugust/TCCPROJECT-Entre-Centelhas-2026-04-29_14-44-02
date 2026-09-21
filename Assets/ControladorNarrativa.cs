@@ -44,7 +44,7 @@ public class ControladorNarrativa : MonoBehaviour
 
         DadosCenario.Quadro quadro =
             cenario.quadros[quadroAtual];
-            
+
         tituloQuadro.text = "";
         textoQuadro.text = "";
 
