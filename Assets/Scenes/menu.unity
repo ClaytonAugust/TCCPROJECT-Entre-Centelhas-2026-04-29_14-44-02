@@ -2380,7 +2380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e6eb553fac39a4ba5d9bf768783b90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuPrincipalManager
-  nomeDoLevelDeJogo: jogo
+  nomeDoLevelDeJogo: CenaNarrativa
   painelMenuInicial: {fileID: 1164859790}
   painelOpcoes: {fileID: 2035384438}
 --- !u!4 &1334233338
