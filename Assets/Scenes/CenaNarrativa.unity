@@ -1916,7 +1916,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 784c9cd98dc0a874dbfbb3209359b188, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ControladorNarrativa
-  cenario: {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
+  cenarios:
+  - {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
+  - {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
+  - {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
+  - {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
+  - {fileID: 11400000, guid: a62da46f84d3a464eaa8bcf965adb074, type: 2}
   imagemQuadro: {fileID: 1784712830}
   tituloQuadro: {fileID: 1444396308}
   textoQuadro: {fileID: 2077991398}
