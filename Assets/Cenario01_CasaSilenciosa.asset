@@ -33,9 +33,14 @@ MonoBehaviour:
     imagem: {fileID: 1334960847774182391, guid: d7ebc84e59198b342a6c490236b34310, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: "que voc\xEA faria nessa situa\xE7\xE3o?"
+  - titulo: A falta
     texto: "Seu Ant\xF4nio diz que sente falta de ter algu\xE9m por perto. A filha
       pergunta o que pode fazer para ajud\xE1-lo."
+    imagem: {fileID: 3736540879100028168, guid: f083b45aa53415640a72ebfbc53c87e6, type: 3}
+    opcoes: []
+    exigeEscolha: 0
+  - titulo: "que voc\xEA faria nessa situa\xE7\xE3o?"
+    texto: 
     imagem: {fileID: 3736540879100028168, guid: f083b45aa53415640a72ebfbc53c87e6, type: 3}
     opcoes:
     - textoOpcao: "Ele precisa se acostumar. N\xE3o d\xE1 para ficar indo l\xE1 toda
