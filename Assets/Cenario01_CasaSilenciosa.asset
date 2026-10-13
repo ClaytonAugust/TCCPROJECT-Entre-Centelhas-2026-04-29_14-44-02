@@ -46,22 +46,22 @@ MonoBehaviour:
     - textoOpcao: "Ele precisa se acostumar. N\xE3o d\xE1 para ficar indo l\xE1 toda
         hora."
       textoConsequencia: Negativa
-      proximoQuadro: 4
+      proximoQuadro: 6
     - textoOpcao: "Liga para ele de vez em quando, s\xF3 para saber se est\xE1 tudo
         bem."
       textoConsequencia: Meio negativa
-      proximoQuadro: 4
+      proximoQuadro: 6
     - textoOpcao: "Pergunta se ele quer companhia, mas deixa a decis\xE3o totalmente
         por conta dele."
       textoConsequencia: Neutra
-      proximoQuadro: 4
+      proximoQuadro: 6
     - textoOpcao: "Combina de visit\xE1-lo com mais frequ\xEAncia e procura manter
         contato durante a semana."
       textoConsequencia: Meio positiva
-      proximoQuadro: 4
+      proximoQuadro: 6
     - textoOpcao: "Conversa com ele sobre o que est\xE1 sentindo, combina momentos
         de conviv\xEAncia e procura ajud\xE1-lo a manter atividades e rela\xE7\xF5es
         que fa\xE7am sentido para ele."
       textoConsequencia: Positiva
-      proximoQuadro: 4
+      proximoQuadro: 6
     exigeEscolha: 1

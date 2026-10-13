@@ -48,21 +48,21 @@ MonoBehaviour:
     - textoOpcao: "\u201CDeixa que ele cuide de tudo. Ela j\xE1 est\xE1 velha e pode
         acabar esquecendo.\u201D"
       textoConsequencia: Negativa
-      proximoQuadro: 0
+      proximoQuadro: 6
     - textoOpcao: "\u201COrganiza tudo para ela, mas avisa depois o que foi feito.\u201D"
       textoConsequencia: Meio negativa
-      proximoQuadro: 0
+      proximoQuadro: 6
     - textoOpcao: "\u201CPergunta se ela precisa de ajuda e s\xF3 interfere quando
         ela pedir.\u201D"
       textoConsequencia: Neutra
-      proximoQuadro: 0
+      proximoQuadro: 6
     - textoOpcao: "\u201CAjuda a organizar as informa\xE7\xF5es, mas deixa que ela
         escolha como quer controlar seus pr\xF3prios cuidados.\u201D"
       textoConsequencia: Meio positiva
-      proximoQuadro: 0
+      proximoQuadro: 6
     - textoOpcao: "\u201CConversa com ela, entende quais dificuldades realmente existem
         e oferece ferramentas e apoio para que ela continue participando das decis\xF5es
         sobre a pr\xF3pria sa\xFAde.\u201D"
       textoConsequencia: Positiva
-      proximoQuadro: 0
+      proximoQuadro: 6
     exigeEscolha: 1
