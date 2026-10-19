@@ -39,7 +39,7 @@ MonoBehaviour:
     imagem: {fileID: 3736540879100028168, guid: f083b45aa53415640a72ebfbc53c87e6, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: "que voc\xEA faria nessa situa\xE7\xE3o?"
+  - titulo: "O que voc\xEA faria nessa situa\xE7\xE3o?"
     texto: 
     imagem: {fileID: 3736540879100028168, guid: f083b45aa53415640a72ebfbc53c87e6, type: 3}
     opcoes:
@@ -59,9 +59,8 @@ MonoBehaviour:
         contato durante a semana."
       textoConsequencia: Meio positiva
       proximoQuadro: 6
-    - textoOpcao: "Conversa com ele sobre o que est\xE1 sentindo, combina momentos
-        de conviv\xEAncia e procura ajud\xE1-lo a manter atividades e rela\xE7\xF5es
-        que fa\xE7am sentido para ele."
+    - textoOpcao: "Conversa com ele sobre o que est\xE1 sentindo e procura ajud\xE1-lo
+        a manter atividades e rela\xE7\xF5es que fa\xE7am sentido para ele."
       textoConsequencia: Positiva
       proximoQuadro: 6
     exigeEscolha: 1

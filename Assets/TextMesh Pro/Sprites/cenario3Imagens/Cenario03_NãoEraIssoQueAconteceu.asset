@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DadosCenario
   nomeCenario: "N\xE3o era isso que aconteceu"
   quadros:
-  - titulo: "\u201CN\xE3o era isso que aconteceu\u201D"
+  - titulo: "N\xE3o era isso que aconteceu"
     texto: Dona Maria percebe que sua carteira desapareceu depois que um parente
       esteve em sua casa.
     imagem: {fileID: -6502930645512065718, guid: e10a8f3fbe268da4eaa067d9b8fdf994, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: 
+  - titulo: "N\xE3o era isso que aconteceu"
     texto: "o filho come\xE7a a comentar com a m\xE3e sobre o ocorrido"
     imagem: {fileID: -7979628505072989595, guid: c1d9488c85cc9394ab64cee9352ef336, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: 
+  - titulo: "N\xE3o era isso que aconteceu"
     texto: "A hist\xF3ria vai passando de pessoa para pessoa. Ningu\xE9m pergunta
       diretamente a Dona Maria o que aconteceu."
     imagem: {fileID: -5968073420919319994, guid: fc45cad442b91654a9c2de39109a7045, type: 3}
@@ -42,23 +42,23 @@ MonoBehaviour:
     texto: 
     imagem: {fileID: -8600277928187147988, guid: 3f6ab3434c5f55a44b0f2b42dbc6f9bf, type: 3}
     opcoes:
-    - textoOpcao: "\u201CAcreditaria na fam\xEDlia e evitaria discutir para n\xE3o
-        criar confus\xE3o.\u201D\n"
+    - textoOpcao: "Acreditaria na fam\xEDlia e evitaria discutir para n\xE3o criar
+        confus\xE3o.\n"
       textoConsequencia: Negativa
       proximoQuadro: 6
-    - textoOpcao: "\u201COuviria Dona Maria, mas continuaria acreditando mais no
-        que os outros disseram.\u201D"
+    - textoOpcao: Ouviria Dona Maria, mas continuaria acreditando mais no que os
+        outros disseram.
       textoConsequencia: Meio negativa
       proximoQuadro: 6
-    - textoOpcao: "\u201CEscutaria os dois lados antes de tirar qualquer conclus\xE3o.\u201D"
+    - textoOpcao: "Escutaria os dois lados antes de tirar qualquer conclus\xE3o."
       textoConsequencia: Neutra
       proximoQuadro: 6
-    - textoOpcao: "\u201CConversaria diretamente com Dona Maria e daria espa\xE7o
-        para ela explicar o que aconteceu.\u201D"
+    - textoOpcao: "Conversaria diretamente com Dona Maria e daria espa\xE7o para
+        ela explicar o que aconteceu."
       textoConsequencia: Meio positiva
       proximoQuadro: 6
-    - textoOpcao: "\u201CEvitaria espalhar acusa\xE7\xF5es, conversaria diretamente
-        com ela e buscaria entender os fatos antes de fazer qualquer julgamento.\u201D"
+    - textoOpcao: "Evitaria espalhar acusa\xE7\xF5es, conversaria diretamente com
+        ela e buscaria entender os fatos antes de fazer qualquer julgamento."
       textoConsequencia: Positiva
       proximoQuadro: 6
     exigeEscolha: 1

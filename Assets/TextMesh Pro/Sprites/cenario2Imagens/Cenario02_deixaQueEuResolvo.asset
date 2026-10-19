@@ -22,13 +22,13 @@ MonoBehaviour:
     imagem: {fileID: -5757731246420361683, guid: b64ff61895d5f8e469763bf405e44759, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: 
+  - titulo: Deixa que eu resolvo
     texto: "Seu filho percebe que ela esqueceu de anotar uma consulta e come\xE7a
       a ficar preocupado."
     imagem: {fileID: 1619595243066064657, guid: 5ef4dfa50d9abfb4baa0e9eaf1c100d7, type: 3}
     opcoes: []
     exigeEscolha: 0
-  - titulo: 
+  - titulo: Deixa que eu resolvo
     texto: "Ele pega o celular dela e come\xE7a a organizar consultas, rem\xE9dios
       e hor\xE1rios sem perguntar nada.\n\nEla diz:\n\u2014 \u201CEu consigo cuidar
       disso.\u201D"
@@ -45,24 +45,24 @@ MonoBehaviour:
     texto: 
     imagem: {fileID: 4602621065642723066, guid: 17d01d89c69ddb3498c3f8c45bd9f6bc, type: 3}
     opcoes:
-    - textoOpcao: "\u201CDeixa que ele cuide de tudo. Ela j\xE1 est\xE1 velha e pode
-        acabar esquecendo.\u201D"
+    - textoOpcao: "Deixa que ele cuide de tudo. Ela j\xE1 est\xE1 velha e pode acabar
+        esquecendo."
       textoConsequencia: Negativa
       proximoQuadro: 6
-    - textoOpcao: "\u201COrganiza tudo para ela, mas avisa depois o que foi feito.\u201D"
+    - textoOpcao: Organiza tudo para ela, mas avisa depois o que foi feito.
       textoConsequencia: Meio negativa
       proximoQuadro: 6
-    - textoOpcao: "\u201CPergunta se ela precisa de ajuda e s\xF3 interfere quando
-        ela pedir.\u201D"
+    - textoOpcao: "Pergunta se ela precisa de ajuda e s\xF3 interfere quando ela
+        pedir."
       textoConsequencia: Neutra
       proximoQuadro: 6
-    - textoOpcao: "\u201CAjuda a organizar as informa\xE7\xF5es, mas deixa que ela
-        escolha como quer controlar seus pr\xF3prios cuidados.\u201D"
+    - textoOpcao: "Ajuda a organizar as informa\xE7\xF5es, mas deixa que ela escolha
+        como quer controlar seus pr\xF3prios cuidados."
       textoConsequencia: Meio positiva
       proximoQuadro: 6
-    - textoOpcao: "\u201CConversa com ela, entende quais dificuldades realmente existem
+    - textoOpcao: "Conversa com ela, entende quais dificuldades realmente existem
         e oferece ferramentas e apoio para que ela continue participando das decis\xF5es
-        sobre a pr\xF3pria sa\xFAde.\u201D"
+        sobre a pr\xF3pria sa\xFAde."
       textoConsequencia: Positiva
       proximoQuadro: 6
     exigeEscolha: 1

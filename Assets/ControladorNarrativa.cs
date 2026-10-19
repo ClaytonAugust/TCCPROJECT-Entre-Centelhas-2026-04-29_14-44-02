@@ -50,6 +50,9 @@ public class ControladorNarrativa : MonoBehaviour
     [Header("Continuar")]
     [SerializeField] private Button botaoContinuar;
 
+    [Header("Voltar")]
+    [SerializeField] private Button botaoVoltar;
+
     private int cenarioAtual = 0;
     private int quadroAtual = 0;
 
@@ -65,6 +68,7 @@ public class ControladorNarrativa : MonoBehaviour
     private void Start()
     {
         botaoContinuar.onClick.AddListener(Continuar);
+        botaoVoltar.onClick.AddListener(Voltar);
 
         if (cenarios == null || cenarios.Count == 0)
         {
@@ -113,8 +117,10 @@ public class ControladorNarrativa : MonoBehaviour
         proximoQuadroEscolhido = -1;
         aguardandoProximoCenario = false;
 
-        botaoContinuar.gameObject.SetActive(true);
+        botaoContinuar.gameObject.SetActive(!quadro.exigeEscolha);
         botaoContinuar.interactable = !quadro.exigeEscolha;
+
+        botaoVoltar.gameObject.SetActive(!quadro.exigeEscolha);
 
         DefinirTextoBotao("Continuar");
 
@@ -171,9 +177,24 @@ public class ControladorNarrativa : MonoBehaviour
             return;
         }
 
-        // Impede registrar mais de uma escolha no mesmo quadro.
-        if (opcaoSelecionada >= 0)
+        // Se clicar novamente na mesma opção, desmarca a escolha.
+        if (opcaoSelecionada == indice)
+        {
+            opcaoSelecionada = -1;
+            proximoQuadroEscolhido = -1;
+
+            textoQuadro.text = quadro.texto;
+
+            botaoContinuar.gameObject.SetActive(false);
+            botaoVoltar.gameObject.SetActive(false);
+
+            foreach (Button botao in botoesOpcoes)
+            {
+                botao.interactable = true;
+            }
+
             return;
+        }
 
         opcaoSelecionada = indice;
 
@@ -182,27 +203,20 @@ public class ControladorNarrativa : MonoBehaviour
 
         proximoQuadroEscolhido = opcao.proximoQuadro;
 
-        // Regra reflexiva: opção 1 = -2; opção 5 = +2.
-        int pontuacao = indice - 2;
-
-        RegistroEscolha registro = new RegistroEscolha(
-            cenario.nomeCenario,
-            quadro.titulo,
-            indice + 1,
-            opcao.textoOpcao,
-            opcao.textoConsequencia,
-            pontuacao
-        );
-
-        respostasJogador.Add(registro);
-
+        // Exibe a consequência da resposta selecionada.
         textoQuadro.text = opcao.textoConsequencia;
 
+        // Exibe os botões somente depois da escolha.
+        botaoContinuar.gameObject.SetActive(true);
         botaoContinuar.interactable = true;
 
+        botaoVoltar.gameObject.SetActive(false);
+
+        // Mantém as opções habilitadas para permitir trocar
+        // ou desmarcar a resposta.
         foreach (Button botao in botoesOpcoes)
         {
-            botao.interactable = false;
+            botao.interactable = true;
         }
     }
 
@@ -229,8 +243,27 @@ public class ControladorNarrativa : MonoBehaviour
             return;
         }
 
+        DadosCenario cenario = cenarios[cenarioAtual];
+        DadosCenario.Quadro quadro = cenario.quadros[quadroAtual];
+
         if (opcaoSelecionada >= 0)
         {
+            DadosCenario.Opcao opcao =
+                quadro.opcoes[opcaoSelecionada];
+
+            int pontuacao = opcaoSelecionada - 2;
+
+            RegistroEscolha registro = new RegistroEscolha(
+                cenario.nomeCenario,
+                quadro.titulo,
+                opcaoSelecionada + 1,
+                opcao.textoOpcao,
+                opcao.textoConsequencia,
+                pontuacao
+            );
+
+            respostasJogador.Add(registro);
+
             quadroAtual = proximoQuadroEscolhido;
         }
         else
@@ -239,6 +272,34 @@ public class ControladorNarrativa : MonoBehaviour
         }
 
         MostrarQuadro();
+    }
+
+    private void Voltar()
+    {
+        if (jogoFinalizado)
+            return;
+
+        if (aguardandoProximoCenario)
+        {
+            aguardandoProximoCenario = false;
+
+            DadosCenario cenario = cenarios[cenarioAtual];
+
+            quadroAtual = cenario.quadros.Length - 1;
+
+            MostrarQuadro();
+            return;
+        }
+
+        if (quadroAtual > 0)
+        {
+            quadroAtual--;
+
+            opcaoSelecionada = -1;
+            proximoQuadroEscolhido = -1;
+
+            MostrarQuadro();
+        }
     }
 
     private void FinalizarCenario()
