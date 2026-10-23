@@ -61,6 +61,8 @@ public class ControladorNarrativa : MonoBehaviour
     [SerializeField] private Button[] botoesSelecaoCenarios;
     [SerializeField] private Image[] imagensCapaCenarios;
     [SerializeField] private GameObject[] iconesCadeado;
+    [SerializeField] private TMP_Text[] titulosCenarios;
+
 
     private bool[] cenariosDesbloqueados;
     private int cenarioAtual;
@@ -195,9 +197,12 @@ public class ControladorNarrativa : MonoBehaviour
             botao.gameObject.SetActive(true);
             botao.interactable = desbloqueado;
 
-            TMP_Text textoBotao = botao.GetComponentInChildren<TMP_Text>(true);
-            if (textoBotao != null)
-                textoBotao.text = cenarios[i].nomeCenario;
+            if (titulosCenarios != null &&
+                i < titulosCenarios.Length &&
+                titulosCenarios[i] != null)
+            {
+                titulosCenarios[i].text = cenarios[i].nomeCenario;
+            }
 
             if (imagensCapaCenarios != null && i < imagensCapaCenarios.Length && imagensCapaCenarios[i] != null)
             {
