@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: debb23eb9347a2941814744a888bbb65
+guid: 33c39d28d1802cd4d85030afc10770e3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5037784736474074088
-    second: sair_0
+      213: 1198685098609204218
+    second: pelo seu olhar_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: sair_0
+      name: pelo seu olhar_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 5
-        width: 503
-        height: 502
+        x: 0
+        y: 0
+        width: 309
+        height: 178
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 814f3973971361ab0800000000000000
-      internalID: -5037784736474074088
+      spriteID: afbd72c0fb592a010800000000000000
+      internalID: 1198685098609204218
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      sair_0: -5037784736474074088
+      pelo seu olhar_0: 1198685098609204218
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

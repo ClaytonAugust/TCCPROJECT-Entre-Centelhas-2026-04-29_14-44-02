@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 [CreateAssetMenu(
@@ -7,6 +6,15 @@ using UnityEngine;
 )]
 public class DadosCenario : ScriptableObject
 {
+    [Header("Tela de Seleção")]
+    public Sprite imagemCapa;
+
+    [Header("Informações do Cenário")]
+    public string nomeCenario;
+
+    [Header("Quadros Narrativos")]
+    public Quadro[] quadros;
+
     [System.Serializable]
     public class Opcao
     {
@@ -34,7 +42,4 @@ public class DadosCenario : ScriptableObject
         public bool exigeEscolha;
     }
 
-    public string nomeCenario;
-
-    public Quadro[] quadros;
 }

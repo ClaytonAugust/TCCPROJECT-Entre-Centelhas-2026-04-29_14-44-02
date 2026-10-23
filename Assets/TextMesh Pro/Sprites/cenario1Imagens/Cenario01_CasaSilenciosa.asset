@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c832e2ef55603488cb697eb71901c4, type: 3}
   m_Name: Cenario01_CasaSilenciosa
   m_EditorClassIdentifier: Assembly-CSharp::DadosCenario
+  imagemCapa: {fileID: 9094543361801899733, guid: 1b0dbf593213cce4b9ffc5ba9900cce0, type: 3}
   nomeCenario: A casa ficou silenciosa
   quadros:
   - titulo: A casa ficou silenciosa

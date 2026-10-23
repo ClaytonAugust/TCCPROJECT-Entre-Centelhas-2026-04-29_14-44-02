@@ -1,33 +1,74 @@
-using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MenuPrincipalManager : MonoBehaviour
+/// <summary>
+/// Controla as ações do menu inicial: som, créditos e saída do jogo.
+/// Pode ser colocado no Canvas ou em um GameObject separado que permaneça ativo.
+/// </summary>
+public class ControladorMenuInicial : MonoBehaviour
 {
-    [SerializeField] private string nomeDoLevelDeJogo;
-    [SerializeField] private GameObject painelMenuInicial;
-    [SerializeField] private GameObject painelOpcoes;
-    public void Jogar()
+    [Header("Créditos")]
+    [SerializeField] private GameObject painelCreditos;
+
+    [Header("Som")]
+    [SerializeField] private Image imagemIconeSom;
+    [SerializeField] private Sprite iconeSomLigado;
+    [SerializeField] private Sprite iconeSomDesligado;
+    [SerializeField] private bool iniciarComSom = true;
+
+    private bool somAtivo;
+
+    private void Start()
     {
-        SceneManager.LoadScene(nomeDoLevelDeJogo);
+        somAtivo = iniciarComSom;
+
+        if (painelCreditos != null)
+            painelCreditos.SetActive(false);
+
+        AplicarEstadoSom();
     }
 
-    public void AbrirOpcoes()
+    public void AlternarSom()
     {
-        painelMenuInicial.SetActive(false);
-        painelOpcoes.SetActive(true);
+        somAtivo = !somAtivo;
+        AplicarEstadoSom();
     }
 
-    public void FecharOpcoes()
+    private void AplicarEstadoSom()
     {
-        painelMenuInicial.SetActive(true);
-        painelOpcoes.SetActive(false);
+        // Controla o volume global de áudio do jogo.
+        AudioListener.volume = somAtivo ? 1f : 0f;
+
+        // Atualiza o ícone para mostrar se o som está ligado ou desligado.
+        if (imagemIconeSom != null)
+        {
+            Sprite sprite = somAtivo ? iconeSomLigado : iconeSomDesligado;
+            if (sprite != null)
+                imagemIconeSom.sprite = sprite;
+        }
     }
-    
-    public void SairJogo() 
+
+    public void AbrirCreditos()
     {
-        Debug.Log("Sair do jogo");
+        if (painelCreditos != null)
+            painelCreditos.SetActive(true);
+        else
+            Debug.LogWarning("ControladorMenuInicial: PainelCreditos não foi atribuído no Inspector.");
+    }
+
+    public void FecharCreditos()
+    {
+        if (painelCreditos != null)
+            painelCreditos.SetActive(false);
+    }
+
+    public void Sair()
+    {
         Application.Quit();
+
+#if UNITY_EDITOR
+        // Permite testar o botão Sair durante o Play Mode no Editor.
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

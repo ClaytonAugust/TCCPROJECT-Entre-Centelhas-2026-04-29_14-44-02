@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c832e2ef55603488cb697eb71901c4, type: 3}
   m_Name: Cenario02_deixaQueEuResolvo
   m_EditorClassIdentifier: Assembly-CSharp::DadosCenario
+  imagemCapa: {fileID: -5757731246420361683, guid: b64ff61895d5f8e469763bf405e44759, type: 3}
   nomeCenario: Deixa Que eu Resolvo
   quadros:
   - titulo: Deixa que eu resolvo

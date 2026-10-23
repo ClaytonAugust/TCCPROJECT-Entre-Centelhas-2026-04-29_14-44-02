@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c832e2ef55603488cb697eb71901c4, type: 3}
   m_Name: "Cenario03_N\xE3oEraIssoQueAconteceu"
   m_EditorClassIdentifier: Assembly-CSharp::DadosCenario
+  imagemCapa: {fileID: -7979628505072989595, guid: c1d9488c85cc9394ab64cee9352ef336, type: 3}
   nomeCenario: "N\xE3o era isso que aconteceu"
   quadros:
   - titulo: "N\xE3o era isso que aconteceu"

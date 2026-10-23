@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bc7871434f4dd2a47b93e52a6b03e4a8
+guid: 8eb568fa3ce8269488483707a930fccc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6465789361302457932
-    second: nuvemMenu2_1_0
+      213: -7894793684096320454
+    second: BotaoCreditos_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nuvemMenu2_1_0
+      name: BotaoCreditos_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 7
-        width: 679
-        height: 177
+        x: 0
+        y: 0
+        width: 315
+        height: 89
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c4ecee8ba291bb950800000000000000
-      internalID: 6465789361302457932
+      spriteID: a3cf07409fe007290800000000000000
+      internalID: -7894793684096320454
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nuvemMenu2_1_0: 6465789361302457932
+      BotaoCreditos_0: -7894793684096320454
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

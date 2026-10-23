@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -34,11 +33,14 @@ public class ControladorNarrativa : MonoBehaviour
         }
     }
 
-    [Header("Lista de cenários")]
-    [SerializeField] private List<DadosCenario> cenarios =
-        new List<DadosCenario>();
+    [Header("Menu Inicial")]
+    [Tooltip("Painel inicial que contém o botão Jogar. Deixe vazio se não houver menu inicial nesta cena.")]
+    [SerializeField] private GameObject painelMenuInicial;
 
-    [Header("Elementos da tela")]
+    [Header("Lista de cenários")]
+    [SerializeField] private List<DadosCenario> cenarios = new List<DadosCenario>();
+
+    [Header("Elementos da narrativa")]
     [SerializeField] private Image imagemQuadro;
     [SerializeField] private TMP_Text tituloQuadro;
     [SerializeField] private TMP_Text textoQuadro;
@@ -50,111 +52,309 @@ public class ControladorNarrativa : MonoBehaviour
     [Header("Continuar")]
     [SerializeField] private Button botaoContinuar;
 
-    [Header("Voltar")]
+    [Header("Voltar para a seleção")]
     [SerializeField] private Button botaoVoltar;
 
-    private int cenarioAtual = 0;
-    private int quadroAtual = 0;
+    [Header("Tela de seleção")]
+    [SerializeField] private GameObject painelSelecaoCenarios;
+    [SerializeField] private GameObject painelNarrativa;
+    [SerializeField] private Button[] botoesSelecaoCenarios;
+    [SerializeField] private Image[] imagensCapaCenarios;
+    [SerializeField] private GameObject[] iconesCadeado;
 
+    private bool[] cenariosDesbloqueados;
+    private int cenarioAtual;
+    private int quadroAtual;
     private int proximoQuadroEscolhido = -1;
     private int opcaoSelecionada = -1;
+    private bool aguardandoProximoCenario;
+    private bool jogoFinalizado;
 
-    private bool aguardandoProximoCenario = false;
-    private bool jogoFinalizado = false;
-
-    private readonly List<RegistroEscolha> respostasJogador =
-        new List<RegistroEscolha>();
+    // Respostas da tentativa atual e respostas das histórias concluídas.
+    private readonly List<RegistroEscolha> respostasJogador = new List<RegistroEscolha>();
+    private readonly Dictionary<int, List<RegistroEscolha>> respostasPorCenario =
+        new Dictionary<int, List<RegistroEscolha>>();
+    private List<RegistroEscolha> respostasCenarioAtual = new List<RegistroEscolha>();
+    private bool respostasCenarioAtualSalvas;
 
     private void Start()
     {
-        botaoContinuar.onClick.AddListener(Continuar);
-        botaoVoltar.onClick.AddListener(Voltar);
-
         if (cenarios == null || cenarios.Count == 0)
         {
-            Debug.LogError("Nenhum cenário foi adicionado!");
+            Debug.LogError("ControladorNarrativa: a lista Cenários está vazia. Adicione os assets DadosCenario no Inspector.");
             return;
         }
+
+        if (painelSelecaoCenarios == null)
+            Debug.LogError("ControladorNarrativa: arraste PainelSelecaoCenarios para o campo correspondente no Inspector.");
+
+        if (painelNarrativa == null)
+            Debug.LogError("ControladorNarrativa: arraste PainelNarrativa para o campo correspondente no Inspector.");
+
+        if (botaoContinuar != null)
+        {
+            botaoContinuar.onClick.RemoveListener(Continuar);
+            botaoContinuar.onClick.AddListener(Continuar);
+        }
+        else
+        {
+            Debug.LogError("ControladorNarrativa: o campo BotaoContinuar não foi preenchido no Inspector.");
+        }
+
+        if (botaoVoltar != null)
+        {
+            botaoVoltar.onClick.RemoveListener(VoltarParaSelecao);
+            botaoVoltar.onClick.AddListener(VoltarParaSelecao);
+        }
+
+        cenariosDesbloqueados = new bool[cenarios.Count];
+        cenariosDesbloqueados[0] = true; // O primeiro cenário começa desbloqueado.
+
+        ConfigurarBotoesSelecao();
+
+        // O controlador deve ficar em um GameObject ativo que não seja um destes painéis.
+        if (painelNarrativa != null)
+            painelNarrativa.SetActive(false);
+
+        if (painelMenuInicial != null)
+        {
+            painelMenuInicial.SetActive(true);
+            if (painelSelecaoCenarios != null)
+                painelSelecaoCenarios.SetActive(false);
+        }
+        else if (painelSelecaoCenarios != null)
+        {
+            // Sem menu inicial configurado, abre a seleção diretamente.
+            painelSelecaoCenarios.SetActive(true);
+        }
+
+        AtualizarTelaSelecao();
+    }
+
+    private void ConfigurarBotoesSelecao()
+    {
+        if (botoesSelecaoCenarios == null)
+        {
+            Debug.LogError("ControladorNarrativa: o array BotoesSelecaoCenarios não foi configurado.");
+            return;
+        }
+
+        for (int i = 0; i < botoesSelecaoCenarios.Length; i++)
+        {
+            Button botao = botoesSelecaoCenarios[i];
+            if (botao == null)
+            {
+                Debug.LogWarning("ControladorNarrativa: o botão de seleção no índice " + i + " está vazio.");
+                continue;
+            }
+
+            int indice = i;
+            botao.onClick.RemoveAllListeners();
+            botao.onClick.AddListener(() => IniciarCenario(indice));
+        }
+    }
+
+    // Vincule este método ao OnClick do botão Jogar do menu inicial.
+    public void AbrirSelecaoCenarios()
+    {
+        if (painelMenuInicial != null)
+            painelMenuInicial.SetActive(false);
+
+        if (painelNarrativa != null)
+            painelNarrativa.SetActive(false);
+
+        if (painelSelecaoCenarios != null)
+            painelSelecaoCenarios.SetActive(true);
+        else
+            Debug.LogError("Não é possível abrir a seleção: PainelSelecaoCenarios não foi atribuído.");
+
+        AtualizarTelaSelecao();
+    }
+
+    private void AtualizarTelaSelecao()
+    {
+        if (botoesSelecaoCenarios == null)
+            return;
+
+        for (int i = 0; i < botoesSelecaoCenarios.Length; i++)
+        {
+            Button botao = botoesSelecaoCenarios[i];
+            if (botao == null)
+                continue;
+
+            if (cenarios == null || i >= cenarios.Count || cenarios[i] == null)
+            {
+                botao.gameObject.SetActive(false);
+                continue;
+            }
+
+            bool desbloqueado = cenariosDesbloqueados != null &&
+                                i < cenariosDesbloqueados.Length &&
+                                cenariosDesbloqueados[i];
+
+            botao.gameObject.SetActive(true);
+            botao.interactable = desbloqueado;
+
+            TMP_Text textoBotao = botao.GetComponentInChildren<TMP_Text>(true);
+            if (textoBotao != null)
+                textoBotao.text = cenarios[i].nomeCenario;
+
+            if (imagensCapaCenarios != null && i < imagensCapaCenarios.Length && imagensCapaCenarios[i] != null)
+            {
+                Image imagem = imagensCapaCenarios[i];
+                imagem.sprite = cenarios[i].imagemCapa;
+                imagem.color = desbloqueado
+                    ? Color.white
+                    : new Color(0.25f, 0.25f, 0.25f, 1f);
+            }
+
+            if (iconesCadeado != null && i < iconesCadeado.Length && iconesCadeado[i] != null)
+                iconesCadeado[i].SetActive(!desbloqueado);
+        }
+    }
+
+    private void IniciarCenario(int indice)
+    {
+        if (cenarios == null || indice < 0 || indice >= cenarios.Count)
+            return;
+
+        if (cenariosDesbloqueados == null || indice >= cenariosDesbloqueados.Length || !cenariosDesbloqueados[indice])
+            return;
+
+        DadosCenario cenario = cenarios[indice];
+        if (cenario == null || cenario.quadros == null || cenario.quadros.Length == 0)
+        {
+            Debug.LogError("O cenário no índice " + indice + " não possui quadros configurados.");
+            return;
+        }
+
+        cenarioAtual = indice;
+        quadroAtual = 0;
+        opcaoSelecionada = -1;
+        proximoQuadroEscolhido = -1;
+        aguardandoProximoCenario = false;
+        jogoFinalizado = false;
+
+        // Só substituímos as respostas anteriores se esta nova tentativa for concluída.
+        // Assim, abandonar uma repetição não apaga os dados de uma história já concluída.
+        respostasCenarioAtual = new List<RegistroEscolha>();
+        respostasCenarioAtualSalvas = false;
+
+        if (painelMenuInicial != null)
+            painelMenuInicial.SetActive(false);
+        if (painelSelecaoCenarios != null)
+            painelSelecaoCenarios.SetActive(false);
+        if (painelNarrativa != null)
+            painelNarrativa.SetActive(true);
 
         MostrarQuadro();
     }
 
+    private void VoltarParaSelecao()
+    {
+        if (jogoFinalizado || aguardandoProximoCenario)
+            return;
+
+        if (painelNarrativa != null)
+            painelNarrativa.SetActive(false);
+        if (painelSelecaoCenarios != null)
+            painelSelecaoCenarios.SetActive(true);
+
+        AtualizarTelaSelecao();
+    }
+
     private void MostrarQuadro()
     {
-        if (cenarioAtual >= cenarios.Count)
+        if (cenarioAtual < 0 || cenarioAtual >= cenarios.Count)
         {
-            FinalizarJogo();
+            Debug.LogError("Índice do cenário inválido: " + cenarioAtual);
             return;
         }
 
         DadosCenario cenario = cenarios[cenarioAtual];
-
         if (cenario == null || cenario.quadros == null)
         {
-            Debug.LogError("Cenário ou quadros não configurados.");
+            Debug.LogError("O cenário ou seu array de quadros não foi configurado.");
             return;
         }
 
-        if (quadroAtual < 0 ||
-            quadroAtual >= cenario.quadros.Length)
+        // Um índice igual ao tamanho do array significa fim do cenário.
+        if (quadroAtual == cenario.quadros.Length)
         {
             FinalizarCenario();
             return;
         }
 
-        DadosCenario.Quadro quadro =
-            cenario.quadros[quadroAtual];
+        if (quadroAtual < 0 || quadroAtual > cenario.quadros.Length)
+        {
+            Debug.LogError("Índice de quadro inválido (" + quadroAtual + ") no cenário '" + cenario.nomeCenario + "'. Verifique os valores Proximo Quadro nas opções.");
+            return;
+        }
 
-        tituloQuadro.text = quadro.titulo;
-        textoQuadro.text = quadro.texto;
+        DadosCenario.Quadro quadro = cenario.quadros[quadroAtual];
+        if (quadro == null)
+        {
+            Debug.LogError("O quadro no índice " + quadroAtual + " do cenário '" + cenario.nomeCenario + "' está vazio.");
+            return;
+        }
 
-        imagemQuadro.sprite = quadro.imagem;
-        imagemQuadro.gameObject.SetActive(
-            quadro.imagem != null
-        );
+        if (tituloQuadro != null)
+            tituloQuadro.text = quadro.titulo;
+        if (textoQuadro != null)
+            textoQuadro.text = quadro.texto;
+
+        if (imagemQuadro != null)
+        {
+            imagemQuadro.sprite = quadro.imagem;
+            imagemQuadro.gameObject.SetActive(quadro.imagem != null);
+        }
 
         opcaoSelecionada = -1;
         proximoQuadroEscolhido = -1;
         aguardandoProximoCenario = false;
 
-        botaoContinuar.gameObject.SetActive(!quadro.exigeEscolha);
-        botaoContinuar.interactable = !quadro.exigeEscolha;
+        int totalOpcoes = quadro.opcoes == null ? 0 : quadro.opcoes.Length;
+        bool quadroTemEscolha = quadro.exigeEscolha && totalOpcoes > 0;
 
-        botaoVoltar.gameObject.SetActive(!quadro.exigeEscolha);
+        if (quadro.exigeEscolha && totalOpcoes == 0)
+            Debug.LogWarning("O quadro '" + quadro.titulo + "' exige escolha, mas não tem opções. Ele será tratado como um quadro de narrativa.");
 
-        DefinirTextoBotao("Continuar");
+        if (botaoContinuar != null)
+        {
+            botaoContinuar.gameObject.SetActive(!quadroTemEscolha);
+            botaoContinuar.interactable = !quadroTemEscolha;
+            DefinirTextoBotao("Continuar");
+        }
 
-        painelEscolhas.SetActive(quadro.exigeEscolha);
+        // O botão Voltar leva à seleção e não aparece durante a escolha.
+        if (botaoVoltar != null)
+            botaoVoltar.gameObject.SetActive(!quadroTemEscolha);
 
-        int totalOpcoes = quadro.opcoes == null
-            ? 0
-            : quadro.opcoes.Length;
+        if (painelEscolhas != null)
+            painelEscolhas.SetActive(quadroTemEscolha);
+
+        if (botoesOpcoes == null)
+            return;
 
         for (int i = 0; i < botoesOpcoes.Length; i++)
         {
             Button botao = botoesOpcoes[i];
+            if (botao == null)
+                continue;
 
             botao.onClick.RemoveAllListeners();
 
-            if (i < totalOpcoes && quadro.exigeEscolha)
+            if (i < totalOpcoes && quadroTemEscolha)
             {
                 botao.gameObject.SetActive(true);
                 botao.interactable = true;
 
-                TMP_Text textoBotao =
-                    botao.GetComponentInChildren<TMP_Text>();
-
+                TMP_Text textoBotao = botao.GetComponentInChildren<TMP_Text>(true);
                 if (textoBotao != null)
-                {
-                    textoBotao.text =
-                        quadro.opcoes[i].textoOpcao;
-                }
+                    textoBotao.text = quadro.opcoes[i].textoOpcao;
 
                 int indice = i;
-
-                botao.onClick.AddListener(
-                    () => SelecionarOpcao(indice)
-                );
+                botao.onClick.AddListener(() => SelecionarOpcao(indice));
             }
             else
             {
@@ -166,93 +366,121 @@ public class ControladorNarrativa : MonoBehaviour
     private void SelecionarOpcao(int indice)
     {
         DadosCenario cenario = cenarios[cenarioAtual];
+        DadosCenario.Quadro quadro = cenario.quadros[quadroAtual];
 
-        DadosCenario.Quadro quadro =
-            cenario.quadros[quadroAtual];
-
-        if (quadro.opcoes == null ||
-            indice < 0 ||
-            indice >= quadro.opcoes.Length)
-        {
+        if (quadro.opcoes == null || indice < 0 || indice >= quadro.opcoes.Length)
             return;
-        }
 
-        // Se clicar novamente na mesma opção, desmarca a escolha.
+        // Clicar na opção já selecionada desmarca a escolha.
         if (opcaoSelecionada == indice)
         {
             opcaoSelecionada = -1;
             proximoQuadroEscolhido = -1;
 
-            textoQuadro.text = quadro.texto;
-
-            botaoContinuar.gameObject.SetActive(false);
-            botaoVoltar.gameObject.SetActive(false);
-
-            foreach (Button botao in botoesOpcoes)
+            if (textoQuadro != null)
+                textoQuadro.text = quadro.texto;
+            if (botaoContinuar != null)
             {
-                botao.interactable = true;
+                botaoContinuar.gameObject.SetActive(false);
+                botaoContinuar.interactable = false;
             }
+            if (botaoVoltar != null)
+                botaoVoltar.gameObject.SetActive(false);
 
+            if (botoesOpcoes != null)
+            {
+                foreach (Button botao in botoesOpcoes)
+                    if (botao != null) botao.interactable = true;
+            }
             return;
         }
 
         opcaoSelecionada = indice;
-
-        DadosCenario.Opcao opcao =
-            quadro.opcoes[indice];
-
+        DadosCenario.Opcao opcao = quadro.opcoes[indice];
         proximoQuadroEscolhido = opcao.proximoQuadro;
 
-        // Exibe a consequência da resposta selecionada.
-        textoQuadro.text = opcao.textoConsequencia;
+        if (textoQuadro != null)
+            textoQuadro.text = opcao.textoConsequencia;
 
-        // Exibe os botões somente depois da escolha.
-        botaoContinuar.gameObject.SetActive(true);
-        botaoContinuar.interactable = true;
-
-        botaoVoltar.gameObject.SetActive(false);
-
-        // Mantém as opções habilitadas para permitir trocar
-        // ou desmarcar a resposta.
-        foreach (Button botao in botoesOpcoes)
+        if (botaoContinuar != null)
         {
-            botao.interactable = true;
+            botaoContinuar.gameObject.SetActive(true);
+            botaoContinuar.interactable = true;
+        }
+
+        // O botão Voltar fica oculto enquanto a resposta estiver selecionada.
+        if (botaoVoltar != null)
+            botaoVoltar.gameObject.SetActive(false);
+
+        // Deixa as opções interativas para que o jogador possa trocar de resposta.
+        if (botoesOpcoes != null)
+        {
+            foreach (Button botao in botoesOpcoes)
+                if (botao != null) botao.interactable = true;
         }
     }
 
     private void Continuar()
     {
-        if (jogoFinalizado)
+        if (jogoFinalizado || cenarios == null || cenarios.Count == 0)
             return;
 
         if (aguardandoProximoCenario)
         {
-            cenarioAtual++;
-
-            if (cenarioAtual >= cenarios.Count)
+            if (cenarioAtual < cenarios.Count - 1)
             {
-                FinalizarJogo();
-                return;
+                // Concluir um cenário desbloqueia o próximo na sequência.
+                int proximoCenario = cenarioAtual + 1;
+                if (cenariosDesbloqueados != null && proximoCenario < cenariosDesbloqueados.Length)
+                    cenariosDesbloqueados[proximoCenario] = true;
+
+                if (painelNarrativa != null)
+                    painelNarrativa.SetActive(false);
+                if (painelSelecaoCenarios != null)
+                    painelSelecaoCenarios.SetActive(true);
+
+                AtualizarTelaSelecao();
             }
-
-            quadroAtual = 0;
-            opcaoSelecionada = -1;
-            proximoQuadroEscolhido = -1;
-
-            MostrarQuadro();
+            else
+            {
+                // A reflexão geral só aparece ao terminar o último cenário.
+                FinalizarJogo();
+            }
             return;
         }
 
         DadosCenario cenario = cenarios[cenarioAtual];
+        if (cenario == null || cenario.quadros == null || quadroAtual < 0 || quadroAtual >= cenario.quadros.Length)
+        {
+            Debug.LogError("Não foi possível avançar: cenário ou quadro inválido.");
+            return;
+        }
+
         DadosCenario.Quadro quadro = cenario.quadros[quadroAtual];
+        if (quadro == null)
+        {
+            Debug.LogError("O quadro atual está vazio.");
+            return;
+        }
 
         if (opcaoSelecionada >= 0)
         {
-            DadosCenario.Opcao opcao =
-                quadro.opcoes[opcaoSelecionada];
+            DadosCenario.Opcao opcao = quadro.opcoes[opcaoSelecionada];
 
+            // O valor pode apontar para um quadro válido ou para quadros.Length (fim da história).
+            if (proximoQuadroEscolhido < 0 || proximoQuadroEscolhido > cenario.quadros.Length)
+            {
+                Debug.LogError(
+                    "A opção '" + opcao.textoOpcao + "' no quadro '" + quadro.titulo +
+                    "' tem Proximo Quadro inválido: " + proximoQuadroEscolhido +
+                    ". Use um índice entre 0 e " + cenario.quadros.Length +
+                    " (" + cenario.quadros.Length + " significa fim do cenário)."
+                );
+                return;
+            }
+
+            // Cinco opções: índices 0..4 geram pontuações -2..+2.
             int pontuacao = opcaoSelecionada - 2;
-
             RegistroEscolha registro = new RegistroEscolha(
                 cenario.nomeCenario,
                 quadro.titulo,
@@ -261,90 +489,98 @@ public class ControladorNarrativa : MonoBehaviour
                 opcao.textoConsequencia,
                 pontuacao
             );
-
-            respostasJogador.Add(registro);
-
+            respostasCenarioAtual.Add(registro);
             quadroAtual = proximoQuadroEscolhido;
         }
         else
         {
+            // Quadros sem escolha seguem para o próximo quadro em sequência.
             quadroAtual++;
         }
 
         MostrarQuadro();
     }
 
-    private void Voltar()
-    {
-        if (jogoFinalizado)
-            return;
-
-        if (aguardandoProximoCenario)
-        {
-            aguardandoProximoCenario = false;
-
-            DadosCenario cenario = cenarios[cenarioAtual];
-
-            quadroAtual = cenario.quadros.Length - 1;
-
-            MostrarQuadro();
-            return;
-        }
-
-        if (quadroAtual > 0)
-        {
-            quadroAtual--;
-
-            opcaoSelecionada = -1;
-            proximoQuadroEscolhido = -1;
-
-            MostrarQuadro();
-        }
-    }
-
     private void FinalizarCenario()
     {
         aguardandoProximoCenario = true;
 
-        painelEscolhas.SetActive(false);
-        imagemQuadro.gameObject.SetActive(false);
+        // Salva as escolhas apenas quando a história é concluída.
+        if (!respostasCenarioAtualSalvas)
+        {
+            respostasPorCenario[cenarioAtual] =
+                new List<RegistroEscolha>(respostasCenarioAtual);
+            ReconstruirRespostasJogador();
+            respostasCenarioAtualSalvas = true;
+        }
 
-        tituloQuadro.text = "Cenário concluído";
+        if (painelEscolhas != null)
+            painelEscolhas.SetActive(false);
+        if (imagemQuadro != null)
+            imagemQuadro.gameObject.SetActive(false);
+
+        if (tituloQuadro != null)
+            tituloQuadro.text = "História concluída";
 
         if (cenarioAtual < cenarios.Count - 1)
         {
-            textoQuadro.text =
-                "Você concluiu este cenário. Reflita sobre " +
-                "as decisões tomadas e como elas podem " +
-                "influenciar a autonomia e o bem-estar " +
-                "das pessoas envolvidas.";
-
-            DefinirTextoBotao("Próximo cenário");
+            if (textoQuadro != null)
+            {
+                textoQuadro.text =
+                    "Você concluiu esta história. Continue para voltar à tela de seleção. " +
+                    "O próximo cenário será desbloqueado.";
+            }
+            DefinirTextoBotao("Voltar à seleção");
         }
         else
         {
-            textoQuadro.text =
-                "Você concluiu o último cenário. " +
-                "Continue para ver sua reflexão final.";
-
-            DefinirTextoBotao("Ver resultado");
+            if (textoQuadro != null)
+            {
+                textoQuadro.text =
+                    "Você concluiu a última história. Continue para ver sua reflexão final, " +
+                    "baseada nas escolhas feitas durante o jogo.";
+            }
+            DefinirTextoBotao("Ver reflexão final");
         }
 
-        botaoContinuar.gameObject.SetActive(true);
-        botaoContinuar.interactable = true;
+        if (botaoContinuar != null)
+        {
+            botaoContinuar.gameObject.SetActive(true);
+            botaoContinuar.interactable = true;
+        }
+        if (botaoVoltar != null)
+            botaoVoltar.gameObject.SetActive(false);
+    }
+
+    private void ReconstruirRespostasJogador()
+    {
+        respostasJogador.Clear();
+
+        // Mantém uma ordem previsível: cenário 1, 2, 3...
+        for (int i = 0; i < cenarios.Count; i++)
+        {
+            List<RegistroEscolha> respostas;
+            if (respostasPorCenario.TryGetValue(i, out respostas))
+                respostasJogador.AddRange(respostas);
+        }
     }
 
     private void FinalizarJogo()
     {
         jogoFinalizado = true;
 
-        painelEscolhas.SetActive(false);
-        imagemQuadro.gameObject.SetActive(false);
-
-        tituloQuadro.text = "Sua reflexão final";
-        textoQuadro.text = GerarFeedbackFinal();
-
-        botaoContinuar.gameObject.SetActive(false);
+        if (painelEscolhas != null)
+            painelEscolhas.SetActive(false);
+        if (imagemQuadro != null)
+            imagemQuadro.gameObject.SetActive(false);
+        if (tituloQuadro != null)
+            tituloQuadro.text = "Sua reflexão final";
+        if (textoQuadro != null)
+            textoQuadro.text = GerarFeedbackFinal();
+        if (botaoContinuar != null)
+            botaoContinuar.gameObject.SetActive(false);
+        if (botaoVoltar != null)
+            botaoVoltar.gameObject.SetActive(false);
 
         RegistrarRespostasNoConsole();
     }
@@ -353,130 +589,76 @@ public class ControladorNarrativa : MonoBehaviour
     {
         if (respostasJogador.Count == 0)
         {
-            return "Você concluiu as histórias. Pense em como " +
-                   "ouvir as pessoas idosas e respeitar suas " +
-                   "decisões pode contribuir para relações " +
-                   "mais respeitosas entre gerações.";
+            return "Você concluiu as histórias. Pense em como ouvir as pessoas idosas e respeitar " +
+                   "suas decisões pode contribuir para relações mais respeitosas entre gerações.";
         }
 
         int totalPontos = 0;
-
         List<string> cenariosPositivos = new List<string>();
         List<string> cenariosReflexao = new List<string>();
-
-        // Agrupa os pontos por cenário.
-        Dictionary<string, int> pontosPorCenario =
-            new Dictionary<string, int>();
-
-        Dictionary<string, int> escolhasPorCenario =
-            new Dictionary<string, int>();
+        Dictionary<string, int> pontosPorCenario = new Dictionary<string, int>();
 
         foreach (RegistroEscolha registro in respostasJogador)
         {
             totalPontos += registro.pontuacao;
-
             if (!pontosPorCenario.ContainsKey(registro.nomeCenario))
-            {
                 pontosPorCenario[registro.nomeCenario] = 0;
-                escolhasPorCenario[registro.nomeCenario] = 0;
-            }
-
-            pontosPorCenario[registro.nomeCenario] +=
-                registro.pontuacao;
-
-            escolhasPorCenario[registro.nomeCenario]++;
+            pontosPorCenario[registro.nomeCenario] += registro.pontuacao;
         }
 
-        foreach (string nome in pontosPorCenario.Keys)
+        foreach (KeyValuePair<string, int> item in pontosPorCenario)
         {
-            int pontos = pontosPorCenario[nome];
-
-            if (pontos > 0)
-            {
-                cenariosPositivos.Add(nome);
-            }
-            else if (pontos < 0)
-            {
-                cenariosReflexao.Add(nome);
-            }
+            if (item.Value > 0)
+                cenariosPositivos.Add(item.Key);
+            else if (item.Value < 0)
+                cenariosReflexao.Add(item.Key);
         }
 
-        float media =
-            (float)totalPontos / respostasJogador.Count;
-
+        float media = (float)totalPontos / respostasJogador.Count;
         StringBuilder mensagem = new StringBuilder();
 
         if (media >= 1f)
         {
             mensagem.Append(
-                "Em suas escolhas, apareceu uma tendência a " +
-                "considerar a autonomia, a escuta e a participação " +
-                "das pessoas idosas nas decisões. "
-            );
-
-            mensagem.Append(
-                "Continue valorizando o diálogo e oferecendo " +
-                "apoio sem presumir que a idade impede alguém " +
-                "de decidir por si."
+                "Em suas escolhas, apareceu uma tendência a considerar a autonomia, a escuta e a participação " +
+                "das pessoas idosas nas decisões. Continue valorizando o diálogo e oferecendo apoio sem presumir " +
+                "que a idade impede alguém de decidir por si."
             );
         }
         else if (media <= -0.5f)
         {
             mensagem.Append(
-                "Suas escolhas abrem espaço para refletir sobre " +
-                "como a intenção de ajudar pode, em algumas " +
-                "situações, acabar retirando a autonomia de " +
-                "uma pessoa idosa. "
-            );
-
-            mensagem.Append(
-                "Antes de decidir por alguém, procure ouvir " +
-                "o que essa pessoa pensa, deseja e consegue " +
-                "fazer, oferecendo apoio sem presumir suas limitações."
+                "Suas escolhas abrem espaço para refletir sobre como a intenção de ajudar pode, em algumas " +
+                "situações, acabar retirando a autonomia de uma pessoa idosa. Antes de decidir por alguém, procure " +
+                "ouvir o que essa pessoa pensa, deseja e consegue fazer, oferecendo apoio sem presumir suas limitações."
             );
         }
         else
         {
             mensagem.Append(
-                "Suas escolhas apresentaram diferentes formas " +
-                "de lidar com as situações. "
-            );
-
-            mensagem.Append(
-                "Uma reflexão importante é equilibrar o cuidado " +
-                "com a autonomia: perguntar antes de ajudar, " +
-                "ouvir a pessoa e considerar sua opinião nas decisões."
+                "Suas escolhas apresentaram diferentes formas de lidar com as situações. Uma reflexão importante " +
+                "é equilibrar o cuidado com a autonomia: perguntar antes de ajudar, ouvir a pessoa e considerar " +
+                "sua opinião nas decisões."
             );
         }
 
         if (cenariosPositivos.Count > 0)
         {
             mensagem.Append("\n\nNos cenários ");
-
             mensagem.Append(string.Join(", ", cenariosPositivos));
-
-            mensagem.Append(
-                ", suas escolhas favoreceram a participação " +
-                "ou a autonomia da pessoa idosa."
-            );
+            mensagem.Append(", suas escolhas favoreceram a participação ou a autonomia da pessoa idosa.");
         }
 
         if (cenariosReflexao.Count > 0)
         {
             mensagem.Append("\n\nNos cenários ");
-
             mensagem.Append(string.Join(", ", cenariosReflexao));
-
-            mensagem.Append(
-                ", vale refletir sobre como incluir mais " +
-                "a pessoa nas decisões e ouvir sua versão."
-            );
+            mensagem.Append(", vale refletir sobre como incluir mais a pessoa nas decisões e ouvir sua versão.");
         }
 
         mensagem.Append(
-            "\n\nEste retorno é uma reflexão baseada nas " +
-            "alternativas escolhidas durante o jogo, não " +
-            "um diagnóstico ou uma avaliação psicológica."
+            "\n\nEste retorno é uma reflexão baseada nas alternativas escolhidas durante o jogo, " +
+            "não um diagnóstico ou uma avaliação psicológica."
         );
 
         return mensagem.ToString();
@@ -485,7 +667,6 @@ public class ControladorNarrativa : MonoBehaviour
     private void RegistrarRespostasNoConsole()
     {
         Debug.Log("===== REGISTRO DAS ESCOLHAS =====");
-
         foreach (RegistroEscolha registro in respostasJogador)
         {
             Debug.Log(
@@ -497,18 +678,16 @@ public class ControladorNarrativa : MonoBehaviour
                 "\nIndicador reflexivo: " + registro.pontuacao
             );
         }
-
         Debug.Log("===== FIM DO REGISTRO =====");
     }
 
     private void DefinirTextoBotao(string texto)
     {
-        TMP_Text textoBotao =
-            botaoContinuar.GetComponentInChildren<TMP_Text>();
+        if (botaoContinuar == null)
+            return;
 
+        TMP_Text textoBotao = botaoContinuar.GetComponentInChildren<TMP_Text>(true);
         if (textoBotao != null)
-        {
             textoBotao.text = texto;
-        }
     }
 }

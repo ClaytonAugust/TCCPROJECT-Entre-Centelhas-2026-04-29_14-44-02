@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 79f46f44334f6724ead857573ea7998e
+guid: 601eba7672067b24da11f94014de2178
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6533372665718922009
-    second: nuvemMenu1_1_0
+      213: 8860250706979766286
+    second: WhatsApp Image 2026-10-19 at 16.45.11_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: nuvemMenu1_1_0
+      name: WhatsApp Image 2026-10-19 at 16.45.11_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 4
-        width: 675
-        height: 193
+        x: 37
+        y: 36
+        width: 76
+        height: 75
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 91b5c6df2d33baa50800000000000000
-      internalID: 6533372665718922009
+      spriteID: e00ce6a031fe5fa70800000000000000
+      internalID: 8860250706979766286
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      nuvemMenu1_1_0: 6533372665718922009
+      WhatsApp Image 2026-10-19 at 16.45.11_0: 8860250706979766286
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

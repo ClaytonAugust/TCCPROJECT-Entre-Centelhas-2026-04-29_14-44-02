@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f74652e74afe7bb4fbc789f6f61ac660
+guid: eb410e0faa7f7a742b42ab6ed66a78e6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1832588939858153858
-    second: Background1920x1080_0
+      213: 6865691368200765566
+    second: "Bot\xE3oJogar_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Background1920x1080_0
+      name: "Bot\xE3oJogar_0"
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1920
-        height: 1080
+        width: 315
+        height: 90
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e7ee17491165196e0800000000000000
-      internalID: -1832588939858153858
+      spriteID: e7082136ce5d74f50800000000000000
+      internalID: 6865691368200765566
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Background1920x1080_0: -1832588939858153858
+      "Bot\xE3oJogar_0": 6865691368200765566
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
